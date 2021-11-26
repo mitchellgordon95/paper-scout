@@ -3,6 +3,7 @@ import {render} from 'react-dom';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css';
 import HomeScreen from './HomeScreen';
+import RulesScreen from './RulesScreen';
 import reportWebVitals from './reportWebVitals';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
@@ -27,6 +28,7 @@ render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomeScreen/>} />
+        <Route path="/rules" element={<RulesScreen/>} />
       </Routes>
     </BrowserRouter>,
   document.getElementById('root')

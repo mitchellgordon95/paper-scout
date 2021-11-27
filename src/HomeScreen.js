@@ -1,7 +1,6 @@
 import './HomeScreen.css';
 import {useState} from 'react'
-import Modal from 'react-modal'
-
+import RulesModal from './RulesModal'
 
 // Import the functions you need from the SDKs you need
 
@@ -16,9 +15,7 @@ function HomeScreen() {
         <button>LEECH</button>
         <p onClick={() => setShowModal(true)}>How does this work?</p>
       </header>
-      <Modal isOpen={showModal}>
-        Rules go here
-      </Modal>
+      <RulesModal isOpen={showModal} onClose={() => setShowModal(false)}/>
     </div>
   );
 }

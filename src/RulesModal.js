@@ -1,4 +1,4 @@
-function RulesScreen() {
+function RulesModal() {
   return (
     <div className="RulesScreen">
       Hello
@@ -6,4 +6,4 @@ function RulesScreen() {
   );
 }
 
-export default RulesScreen;
+export default RulesModal;

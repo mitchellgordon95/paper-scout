@@ -1,18 +1,24 @@
 import './HomeScreen.css';
-import {Outlet, Link} from 'react-router-dom'
+import {useState} from 'react'
+import Modal from 'react-modal'
+
 
 // Import the functions you need from the SDKs you need
 
 function HomeScreen() {
+  const [showModal, setShowModal] = useState(false)
+
   return (
     <div className="HomeScreen">
       <header className="HomeScreen-header">
         <h1>Paper Scout V1</h1>
         <button>SCOUT</button>
         <button>LEECH</button>
-        <Link to="/rules">How does this work?</Link>
+        <p onClick={() => setShowModal(true)}>How does this work?</p>
       </header>
-      <Outlet/>
+      <Modal isOpen={showModal}>
+        Rules go here
+      </Modal>
     </div>
   );
 }

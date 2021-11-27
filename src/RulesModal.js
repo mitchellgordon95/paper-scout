@@ -10,12 +10,12 @@ function RulesModal({isOpen, onClose}) {
       <p>Paper Scout is a GAME in which you get POINTS for ENDORSING
       popular academic papers. The earlier you endorse, the more
       points you get.</p>
-      <Flexbox flexDirection='row' justifyContent='center' alignItems='space-between'>
-        <img src="https://en.pimg.jp/047/720/601/1/47720601.jpg" width="100px" height="100px"/>
-        <img src="https://en.pimg.jp/047/720/601/1/47720601.jpg" width="100px" height="100px"/>
-        <img src="https://en.pimg.jp/047/720/601/1/47720601.jpg" width="100px" height="100px"/>
-        <img src="https://en.pimg.jp/047/720/601/1/47720601.jpg" width="100px" height="100px"/>
-        <img src="https://en.pimg.jp/047/720/601/1/47720601.jpg" width="100px" height="100px"/>
+      <Flexbox flexDirection='row' justifyContent='space-evenly'>
+        <img alt="endorsement star" src="https://en.pimg.jp/047/720/601/1/47720601.jpg" width="100px" height="100px"/>
+        <img alt="endorsement star" src="https://en.pimg.jp/047/720/601/1/47720601.jpg" width="100px" height="100px"/>
+        <img alt="endorsement star" src="https://en.pimg.jp/047/720/601/1/47720601.jpg" width="100px" height="100px"/>
+        <img alt="endorsement star" src="https://en.pimg.jp/047/720/601/1/47720601.jpg" width="100px" height="100px"/>
+        <img alt="endorsement star" src="https://en.pimg.jp/047/720/601/1/47720601.jpg" width="100px" height="100px"/>
       </Flexbox>
 
       <p>You get 5 ENDORSEMENT STARS total. If you'd like to endorse a

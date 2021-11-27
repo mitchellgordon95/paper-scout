@@ -9,14 +9,16 @@ function HomeScreen() {
 
   return (
     <div className="HomeScreen">
-      <header className="HomeScreen-header">
-        <h1>Paper Scout V1</h1>
+      <Flexbox flexDirection='column' justifyContent='center' alignItems='center' minHeight='100vh'>
+        <div className='HomeScreen-title'>
+          <h1>Paper Scout V1</h1>
+        </div>
         <Flexbox flexDirection='row' alignItems='center' justifyContent='space-evenly' height='200px' width='200px'>
           <button><Link to='/scout'>SCOUT</Link></button>
           <button>LEECH</button>
         </Flexbox>
         <p onClick={() => setShowModal(true)}>How does this work?</p>
-      </header>
+      </Flexbox>
       <RulesModal isOpen={showModal} onClose={() => setShowModal(false)}/>
     </div>
   );

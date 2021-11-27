@@ -1,3 +1,4 @@
+import './MainLayout.css';
 import {Outlet} from 'react-router-dom'
 
 // Placeholder, will eventually hold shared header stuff like login links, profile, etc.

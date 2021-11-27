@@ -2,6 +2,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css';
+import MainLayout from './MainLayout'
 import HomeScreen from './screens/HomeScreen';
 import ScoutScreen from './screens/ScoutScreen';
 import reportWebVitals from './reportWebVitals';
@@ -26,8 +27,10 @@ initializeApp(firebaseConfig);
 render(
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomeScreen/>} />
-        <Route path="/scout" element={<ScoutScreen/>} />
+        <Route path="/" element={<MainLayout/>}>
+            <Route path="/" element={<HomeScreen/>} />
+            <Route path="/scout" element={<ScoutScreen/>} />
+        </Route>
       </Routes>
     </BrowserRouter>,
   document.getElementById('root')

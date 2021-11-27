@@ -8,8 +8,7 @@ function HomeScreen() {
   const [showModal, setShowModal] = useState(false)
 
   return (
-    <div className="HomeScreen">
-      <Flexbox flexDirection='column' justifyContent='center' alignItems='center' minHeight='100vh'>
+      <Flexbox flexDirection='column' justifyContent='center' alignItems='center'>
         <div className='HomeScreen-title'>
           <h1>Paper Scout V1</h1>
         </div>
@@ -18,9 +17,8 @@ function HomeScreen() {
           <button>LEECH</button>
         </Flexbox>
         <p onClick={() => setShowModal(true)}>How does this work?</p>
+        <RulesModal isOpen={showModal} onClose={() => setShowModal(false)}/>
       </Flexbox>
-      <RulesModal isOpen={showModal} onClose={() => setShowModal(false)}/>
-    </div>
   );
 }
 

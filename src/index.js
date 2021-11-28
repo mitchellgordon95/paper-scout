@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css';
 import MainLayout from './MainLayout'
 import HomeScreen from './screens/HomeScreen';
+import PaperScreen from './screens/PaperScreen';
 import ScoutScreen from './screens/ScoutScreen';
 import reportWebVitals from './reportWebVitals';
 import { initializeApp } from "firebase/app";
@@ -30,6 +31,7 @@ render(
         <Route path="/" element={<MainLayout/>}>
             <Route path="/" element={<HomeScreen/>} />
             <Route path="/scout" element={<ScoutScreen/>} />
+            <Route path="/paper/arxiv/:paperId" element={<PaperScreen/>} />
         </Route>
       </Routes>
     </BrowserRouter>,

@@ -11,6 +11,10 @@ const doSearch = async ({searchQuery, category, pageStart, setPageResults, setTo
   setTotalResults(totalResults)
 }
 
+const navigateToPaper = ({paperId}) => {
+  window.location.replace(`/paper/arxiv/${paperId}`)
+}
+
 function ScoutScreen() {
   const [ category, setCategory ] = useState('cs.CL')
   const [ searchQuery, setSearchQuery ] = useState()
@@ -29,7 +33,7 @@ function ScoutScreen() {
       </Flexbox>
       <Flexbox flexDirection='column'>
         {pageResults.map(entry => {
-          return <Flexbox flexDirection='column' justifyContent='flex-start' key={entry.id}>
+          return <Flexbox flexDirection='column' justifyContent='flex-start' key={entry.id} onClick={() => navigateToPaper({paperId: entry.id})}>
             <h4>{entry.title}</h4>
             <p>{entry.authors ? entry.authors.join(", ") : ""}</p>
             <p>{entry.abstract.slice(0,200) + "..."}</p>

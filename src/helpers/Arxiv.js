@@ -10,6 +10,7 @@ export const fetchAndParseArxiv = async (queryString) => {
     const authorList = Array.from(entry.getElementsByTagName('author'))
     const categories = Array.from(entry.getElementsByTagName('category'))
     return {
+      id: entry.getElementsByTagName('id')[0].textContent.split('/').pop(),
       title: entry.getElementsByTagName('title')[0].textContent,
       abstract: entry.getElementsByTagName('summary')[0].textContent,
       authors: authorList.map(author => author.getElementsByTagName('name')[0].textContent),

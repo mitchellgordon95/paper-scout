@@ -4,7 +4,7 @@ import {useState} from 'react'
 import Flexbox from 'flexbox-react'
 
 const getPaperInfo = async ({paperId}) => {
-  const resp = await fetch(`http://export.arxiv.org/api/query?id_list=${paperId}`)
+  const resp = await fetch(`https://export.arxiv.org/api/query?id_list=${paperId}`)
   const xmlStr = await resp.text()
   const parser = new DOMParser();
   const results = parser.parseFromString(xmlStr, 'text/xml')

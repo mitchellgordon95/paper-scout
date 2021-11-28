@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# Paper Scout
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -39,32 +39,25 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
+# Firebase Deploys
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+We're hosting with Firebase, and also using Firebase auth and
+Firestore DB. Deploying happens automatically via github actions
+whenever a PR is merged or whenever master is pushed.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Thoughts on Firestore
 
-### Code Splitting
+We're using Firestore because it's free, but we're going to pretend
+it's an SQL database so that it's easier to migrate later. Why? AFAICT
+NoSQL is only the correct choice when you need to support huge write
+scalability and are willing to sacrifice a bunch of ACID
+features. More subjectively, I also think NoSQL makes it harder to "do
+the right thing" by giving you too many choices (and therefore burns 
+developer time in the long run). In SQL, there's usually one or two
+"right" ways to normalize data that efficiently support many types of
+queries. In NoSQL, you basically have to know what all your query
+patterns are up front and design your data for that.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+In my experience, the data model changes much less frequently than the
+queries. If this ends up being worth expanding, I'll probably move to
+Postgres + GraphQL.

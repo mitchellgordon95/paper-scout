@@ -2,7 +2,7 @@ import './PaperScreen.css';
 import { useParams } from 'react-router-dom'
 import {useState, useEffect} from 'react'
 import Flexbox from 'flexbox-react'
-import { collection, getFirestore, getDocs, addDoc, query, where, orderBy} from 'firebase/firestore';
+import { collection, getFirestore, onSnapshot, addDoc, query, where, orderBy} from 'firebase/firestore';
 import firebaseApp from '../FirebaseApp'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
@@ -30,15 +30,6 @@ const getPaperInfo = async ({paperId}) => {
   }
 }
 
-const getEndorsements = async ({paperId}) => {
-  const q = query(
-    collection(db, 'endorsements'),
-    where('paperId', "==", `arxiv://${paperId}`),
-    orderBy('updatedAt')
-  );
-  return getDocs(q)
-}
-
 const endorsePaper = async ({paperId, currentUser, endorsements, setEndorsements}) => {
   if (!currentUser) {
     window.location.replace('/login')
@@ -62,9 +53,15 @@ function PaperScreen() {
 
   useEffect(() => {
     getPaperInfo({paperId}).then(info => setPaperInfo(info))
-    getEndorsements({paperId}).then(results => setEndorsements(results.docs.map(x=>x.data())))
+
+    // Listen for changes to the endorsements for this paper
+    const q = query(
+      collection(db, 'endorsements'),
+      where('paperId', "==", `arxiv://${paperId}`),
+      orderBy('updatedAt')
+    );
+    onSnapshot(q, snapshot => setEndorsements(snapshot.docs.map(x => x.data())))
   }, [paperId])
-  console.log({endorsements})
 
   const userAlreadyEndorsed = endorsements && endorsements.filter(ed => ed.userId === currentUser?.uid).length > 0
   return (

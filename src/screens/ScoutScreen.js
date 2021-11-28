@@ -16,7 +16,7 @@ function ScoutScreen() {
   const [ pageResults, setPageResults ] = useState([])
 
   const doSearch = async () => {
-    const searchQueryFrag = searchQuery ? `all:${searchQuery}` : ''
+    const searchQueryFrag = searchQuery ? `all:${escape(searchQuery)}` : ''
     const { pageResults, totalResults } = await fetchAndParseArxiv(`search_query=${searchQueryFrag}+AND+cat:${category}&sortBy=lastUpdatedDate&start=${pageStart}&max_results=${PER_PAGE}`)
     setPageResults(pageResults)
     setTotalResults(totalResults)

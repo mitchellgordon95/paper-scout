@@ -1,7 +1,9 @@
 import './PaperScreen.css';
 import { useParams } from 'react-router-dom'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import Flexbox from 'flexbox-react'
+import { collection, getFirestore, getDocs, query, where } from 'firebase/firestore';
+
 
 const getPaperInfo = async ({paperId}) => {
   const resp = await fetch(`https://export.arxiv.org/api/query?id_list=${paperId}`)
@@ -24,16 +26,28 @@ const getPaperInfo = async ({paperId}) => {
   }
 }
 
+const getEndorsements = async ({paperId}) => {
+  const db = getFirestore();
+  const q = query(collection(db, 'endorsements'), where('paperId', "==", `arxiv://${paperId}`));
+  return getDocs(q)
+}
+
 function PaperScreen() {
   const { paperId } = useParams()
   const [ paperInfo, setPaperInfo ] = useState({})
-  getPaperInfo({paperId}).then(info => setPaperInfo(info))
+  const [ endorsements, setEndorsements ] = useState([])
+  useEffect(() => {
+    getPaperInfo({paperId}).then(info => setPaperInfo(info))
+    getEndorsements({paperId}).then(results => setEndorsements(results.docs.map(x=>x.data())))
+  }, [paperId])
   return (
     <Flexbox flexDirection='column' className="PaperScreen" flex="1">
       <h2>{paperInfo.title || "Loading..."}</h2>
       <h5>{paperInfo.categories ? paperInfo.categories.join(" ") : ""}</h5>
       <h4>{paperInfo.authors ? paperInfo.authors.join(", ") : ""}</h4>
       <p>{paperInfo.abstract}</p>
+      Endorsed By:
+      {endorsements.map(endorsement => <p>{endorsement.userId}</p>)}
     </Flexbox>
   );
 }

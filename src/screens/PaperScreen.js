@@ -30,7 +30,7 @@ function PaperScreen() {
   getPaperInfo({paperId}).then(info => setPaperInfo(info))
   return (
     <Flexbox flexDirection='column' className="PaperScreen">
-      <h2>{paperInfo.title}</h2>
+      <h2>{paperInfo.title || "Loading..."}</h2>
       <h5>{paperInfo.categories ? paperInfo.categories.join(" ") : ""}</h5>
       <h4>{paperInfo.authors ? paperInfo.authors.join(", ") : ""}</h4>
       <p>{paperInfo.abstract}</p>

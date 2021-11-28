@@ -29,7 +29,7 @@ function PaperScreen() {
   const [ paperInfo, setPaperInfo ] = useState({})
   getPaperInfo({paperId}).then(info => setPaperInfo(info))
   return (
-    <Flexbox flexDirection='column' className="PaperScreen">
+    <Flexbox flexDirection='column' className="PaperScreen" flex="1">
       <h2>{paperInfo.title || "Loading..."}</h2>
       <h5>{paperInfo.categories ? paperInfo.categories.join(" ") : ""}</h5>
       <h4>{paperInfo.authors ? paperInfo.authors.join(", ") : ""}</h4>

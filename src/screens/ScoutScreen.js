@@ -1,9 +1,11 @@
 import './ScoutScreen.css';
+import Flexbox from 'flexbox-react'
+
 function ScoutScreen() {
   return (
-    <div className="ScoutScreen">
+    <Flexbox flexDirection='column' className="ScoutScreen" flex="1">
       TODO
-    </div>
+    </Flexbox>
   );
 }
 

@@ -8,7 +8,7 @@ function HomeScreen() {
   const [showModal, setShowModal] = useState(false)
 
   return (
-      <Flexbox flexDirection='column' justifyContent='center' alignItems='center'>
+      <Flexbox flexDirection='column' justifyContent='center' alignItems='center' flex="1">
         <div className='HomeScreen-title'>
           <h1>Paper Scout V1</h1>
         </div>

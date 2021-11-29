@@ -55,7 +55,7 @@ function PaperScreen() {
 
   const userAlreadyEndorsed = endorsements && endorsements.filter(ed => ed.userId === currentUser?.uid).length > 0
   return (
-    <Flexbox flexDirection='column' className="PaperScreen" flex="1" alignItems='center'>
+    <Flexbox flexDirection='column' className="PaperScreen" flex="1" alignItems='center' maxWidth='80vw'>
       <h2>{paperInfo.title || "Loading..."}</h2>
       {/* TODO: clicking a category searches for the category in /scout */}
       <div>{paperInfo.categories ? paperInfo.categories.join(" ") : ""}</div>

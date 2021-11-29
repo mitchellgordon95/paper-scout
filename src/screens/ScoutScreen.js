@@ -1,12 +1,9 @@
 import Flexbox from 'flexbox-react'
 import { useState, useEffect } from 'react'
 import { fetchAndParseArxiv } from '../helpers/Arxiv'
+import { useNavigate } from 'react-router'
 
 const PER_PAGE = 10
-
-const navigateToPaper = ({paperId}) => {
-  window.location.replace(`/paper/arxiv/${paperId}`)
-}
 
 function ScoutScreen() {
   const [ category, setCategory ] = useState('cs.CL')
@@ -14,6 +11,7 @@ function ScoutScreen() {
   const [ currentPage, setCurrentPage ] = useState(0)
   const [ totalResults, setTotalResults] = useState()
   const [ pageResults, setPageResults ] = useState([])
+  const navigate = useNavigate()
 
   const doSearch = async ({pageNumber}) => {
     const searchQueryFrag = searchQuery ? `all:${escape(searchQuery)}+AND+` : ''
@@ -61,7 +59,7 @@ function ScoutScreen() {
       </Flexbox>
       <Flexbox flexDirection='column'>
         {pageResults.map(entry => {
-          return <Flexbox flexDirection='column' justifyContent='flex-start' key={entry.id} onClick={() => navigateToPaper({paperId: entry.id})}>
+          return <Flexbox flexDirection='column' justifyContent='flex-start' key={entry.id} onClick={() => navigate(`/paper/arxiv/${entry.id}`)}>
             <h4>{entry.title}</h4>
             <div>{(new Date(entry.updatedAt)).toString()}</div>
             <div>{entry.authors ? entry.authors.join(", ") : ""}</div>

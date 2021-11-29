@@ -6,6 +6,7 @@ import { collection, getFirestore, onSnapshot, addDoc, query, where, orderBy} fr
 import firebaseApp from '../FirebaseApp'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { fetchAndParseArxiv } from '../helpers/Arxiv'
+import { useNavigate } from 'react-router'
 
 const auth = getAuth(firebaseApp)
 const db = getFirestore();
@@ -18,9 +19,9 @@ const getPaperInfo = async ({paperId}) => {
   return (await fetchAndParseArxiv(`id_list=${paperId}`)).pageResults[0]
 }
 
-const endorsePaper = async ({paperId, currentUser, endorsements, setEndorsements}) => {
+const endorsePaper = async ({paperId, currentUser, endorsements, setEndorsements, navigate}) => {
   if (!currentUser) {
-    window.location.replace('/login')
+    navigate('/login')
   }
   else {
     await addDoc(collection(db, 'endorsements'), {
@@ -37,6 +38,7 @@ function PaperScreen() {
   const [ paperInfo, setPaperInfo ] = useState({})
   const [ endorsements, setEndorsements ] = useState([])
   const [ currentUser, setCurrentUser ] = useState()
+  const navigate = useNavigate()
   onAuthStateChanged(auth, user => setCurrentUser(user))
 
   useEffect(() => {
@@ -59,8 +61,10 @@ function PaperScreen() {
       <div>{paperInfo.categories ? paperInfo.categories.join(" ") : ""}</div>
       {/* TODO: clicking an author searches for the author in /scout */}
       <div>{paperInfo.authors ? paperInfo.authors.join(", ") : ""}</div>
+      <br/>
       <div>{paperInfo.abstract}</div>
-      { userAlreadyEndorsed ? '' : <button onClick={() => endorsePaper({paperId, currentUser, endorsements, setEndorsements})}>Endorse</button>}
+      <br/>
+      { userAlreadyEndorsed ? '' : <button onClick={() => endorsePaper({paperId, currentUser, endorsements, setEndorsements, navigate})}>Endorse</button>}
       Endorsed By:
       {endorsements.map(endorsement => <p key={endorsement.userId}>{endorsement.userDisplayName}</p>)}
     </Flexbox>

@@ -39,6 +39,7 @@ function ScoutScreen() {
   }
 
   // Do a default search with only the category to populate the page.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => doSearch({pageNumber: 0}), [])
   const nextPageButton = <button onClick={searchNextPage}>Next</button>
   const prevPageButton = <button onClick={searchPrevPage}>Prev</button>

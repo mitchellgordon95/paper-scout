@@ -53,11 +53,13 @@ function PaperScreen() {
 
   const userAlreadyEndorsed = endorsements && endorsements.filter(ed => ed.userId === currentUser?.uid).length > 0
   return (
-    <Flexbox flexDirection='column' className="PaperScreen" flex="1">
+    <Flexbox flexDirection='column' className="PaperScreen" flex="1" alignItems='center'>
       <h2>{paperInfo.title || "Loading..."}</h2>
-      <h5>{paperInfo.categories ? paperInfo.categories.join(" ") : ""}</h5>
-      <h4>{paperInfo.authors ? paperInfo.authors.join(", ") : ""}</h4>
-      <p>{paperInfo.abstract}</p>
+      {/* TODO: clicking a category searches for the category in /scout */}
+      <div>{paperInfo.categories ? paperInfo.categories.join(" ") : ""}</div>
+      {/* TODO: clicking an author searches for the author in /scout */}
+      <div>{paperInfo.authors ? paperInfo.authors.join(", ") : ""}</div>
+      <div>{paperInfo.abstract}</div>
       { userAlreadyEndorsed ? '' : <button onClick={() => endorsePaper({paperId, currentUser, endorsements, setEndorsements})}>Endorse</button>}
       Endorsed By:
       {endorsements.map(endorsement => <p key={endorsement.userId}>{endorsement.userDisplayName}</p>)}

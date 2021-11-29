@@ -45,7 +45,7 @@ function ScoutScreen() {
   const prevPageButton = <button onClick={searchPrevPage}>Prev</button>
 
   return (
-    <Flexbox flexDirection='column' flex="1" alignItems='flex-start'>
+    <Flexbox flexDirection='column' flex="1" alignItems='flex-start' maxWidth='80vw'>
       <Flexbox>
         <form onSubmit={onSearchSubmit}>
           <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} />

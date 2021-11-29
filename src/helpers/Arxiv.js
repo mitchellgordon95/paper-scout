@@ -14,7 +14,8 @@ export const fetchAndParseArxiv = async (queryString) => {
       title: entry.getElementsByTagName('title')[0].textContent,
       abstract: entry.getElementsByTagName('summary')[0].textContent,
       authors: authorList.map(author => author.getElementsByTagName('name')[0].textContent),
-      categories: categories.map(category => category.getAttribute('term'))
+      categories: categories.map(category => category.getAttribute('term')),
+      updatedAt: entry.getElementsByTagName('updated')[0].textContent
     }
   })
 

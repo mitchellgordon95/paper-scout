@@ -61,6 +61,7 @@ function ScoutScreen() {
         {pageResults.map(entry => {
           return <Flexbox flexDirection='column' justifyContent='flex-start' key={entry.id} onClick={() => navigate(`/paper/arxiv/${entry.id}`)}>
             <h4>{entry.title}</h4>
+            {/* TODO: views and endorsements? */}
             <div>{(new Date(entry.updatedAt)).toString()}</div>
             <div>{entry.authors ? entry.authors.join(", ") : ""}</div>
             <div>{entry.abstract.slice(0,200) + "..."}</div>

@@ -2,7 +2,6 @@ import './HomeScreen.css';
 import {useState} from 'react'
 import RulesModal from '../modals/RulesModal'
 import Flexbox from 'flexbox-react'
-import {Link} from 'react-router-dom'
 import { useNavigate } from 'react-router'
 
 function HomeScreen() {

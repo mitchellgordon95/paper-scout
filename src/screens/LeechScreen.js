@@ -1,10 +1,12 @@
 import {useState, useEffect} from 'react'
 import Flexbox from 'flexbox-react'
+import { useNavigate } from 'react-router'
 import firebaseApp from '../FirebaseApp';
 import { getFirestore, collection, onSnapshot, orderBy, query} from 'firebase/firestore';
 const db = getFirestore(firebaseApp)
 
 function LeechScreen() {
+  const navigate = useNavigate()
   const [ users, setUsers ] = useState()
   useEffect(() => {
     const q = query(
@@ -21,7 +23,10 @@ function LeechScreen() {
       <Flexbox flexDirection='column'>
         <div>Leaderboard:</div>
         {
-          users.map(user => <div key={user.id}>{user.displayName} ({user.points || 0} pts)</div>)
+          users.map(user =>
+            <div key={user.id} onClick={()=>navigate(`/user/${user.id}`)}>
+              {user.displayName} ({user.points || 0} pts)
+            </div>)
         }
       </Flexbox>
       : 'Loading...'

@@ -3,14 +3,19 @@ import Flexbox from 'flexbox-react'
 import { useNavigate, useParams } from 'react-router'
 import firebaseApp from '../FirebaseApp';
 import { getFirestore, collection, doc, getDoc, onSnapshot, query, where, orderBy} from 'firebase/firestore';
+import { getAuth, signOut, onAuthStateChanged} from 'firebase/auth';
 
 const db = getFirestore(firebaseApp)
+const auth = getAuth(firebaseApp)
 
 function ProfileScreen() {
   const navigate = useNavigate()
   const { userId } = useParams()
   const [user, setUser] = useState()
   const [endorsements, setEndorsements] = useState()
+  const [ currentUser, setCurrentUser ] = useState()
+
+  onAuthStateChanged(auth, user => setCurrentUser(user))
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -26,8 +31,9 @@ function ProfileScreen() {
   return (
     <Flexbox flexDirection='column' flex="1">
       { user ?
-        <Flexbox flexDirection='column'>
+        <Flexbox flexDirection='column' alignItems='flex-start'>
           <h1>{user.displayName}</h1>
+          {currentUser && userId === currentUser.uid ? <button onClick={() => signOut(auth)}>Sign Out</button> : ""}
           <div>Points {user.points || '0'}</div>
         </Flexbox>
         : "Loading..."

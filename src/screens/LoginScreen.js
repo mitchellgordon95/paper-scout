@@ -26,6 +26,7 @@ function LoginScreen() {
       signInSuccess: async (currentUser) => {
         await setDoc(doc(db, "users", currentUser.uid), {
           displayName: currentUser.displayName,
+          points: 0
         })
         navigate(-1)
       }

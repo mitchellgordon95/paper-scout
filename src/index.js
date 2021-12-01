@@ -6,6 +6,7 @@ import MainLayout from './MainLayout'
 import HomeScreen from './screens/HomeScreen';
 import PaperScreen from './screens/PaperScreen';
 import LoginScreen from './screens/LoginScreen';
+import LeechScreen from './screens/LeechScreen';
 import ScoutScreen from './screens/ScoutScreen';
 import reportWebVitals from './reportWebVitals';
 
@@ -18,6 +19,7 @@ render(
             <Route path="/" element={<HomeScreen/>} />
             <Route path="/login" element={<LoginScreen/>} />
             <Route path="/scout" element={<ScoutScreen/>} />
+            <Route path="/leech" element={<LeechScreen/>} />
             <Route path="/paper/arxiv/:paperId" element={<PaperScreen/>} />
         </Route>
       </Routes>

@@ -19,7 +19,7 @@ const getPaperInfo = async ({paperId}) => {
   return (await fetchAndParseArxiv(`id_list=${paperId}`)).pageResults[0]
 }
 
-const endorsePaper = async ({paperId, currentUser, endorsements, setEndorsements, navigate}) => {
+const endorsePaper = async ({paperId, paperInfo, currentUser, endorsements, setEndorsements, navigate}) => {
   if (!currentUser) {
     navigate('/login')
   }
@@ -27,8 +27,10 @@ const endorsePaper = async ({paperId, currentUser, endorsements, setEndorsements
     await addDoc(collection(db, 'endorsements'), {
       paperId: `arxiv://${paperId}`,
       userId: currentUser.uid,
+      paperInfo,
       userDisplayName: currentUser.displayName,
       updatedAt: Date.now(),
+      deletedAt: null,
     })
   }
 }
@@ -64,7 +66,7 @@ function PaperScreen() {
       <br/>
       <div>{paperInfo.abstract}</div>
       <br/>
-      { userAlreadyEndorsed ? '' : <button onClick={() => endorsePaper({paperId, currentUser, endorsements, setEndorsements, navigate})}>Endorse</button>}
+      { userAlreadyEndorsed ? '' : <button onClick={() => endorsePaper({paperId, paperInfo, currentUser, endorsements, setEndorsements, navigate})}>Endorse</button>}
       Endorsed By:
       {endorsements.map(endorsement => <p key={endorsement.userId}>{endorsement.userDisplayName}</p>)}
     </Flexbox>

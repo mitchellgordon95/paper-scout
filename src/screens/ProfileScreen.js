@@ -17,7 +17,6 @@ function ProfileScreen() {
 
   onAuthStateChanged(auth, user => setCurrentUser(user))
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     getDoc(doc(db, "users", userId)).then(user => setUser(user.data()))
     const q = query(
@@ -26,7 +25,7 @@ function ProfileScreen() {
       orderBy('updatedAt')
     );
     onSnapshot(q, snapshot => setEndorsements(snapshot.docs.map(x => x.data())))
-  }, [])
+  }, [userId])
 
   return (
     <Flexbox flexDirection='column' flex="1">

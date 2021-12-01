@@ -15,7 +15,6 @@ function LeechScreen() {
     );
     onSnapshot(q, snapshot => setUsers(snapshot.docs.map(x => ({id: x.id, ...x.data()}))))
   }, [])
-  console.log(users)
   
   return (
     <Flexbox flexDirection='column' flex="1">

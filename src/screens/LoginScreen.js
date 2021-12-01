@@ -4,8 +4,10 @@ import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebaseApp from '../FirebaseApp';
 import { useNavigate } from 'react-router'
 import { getAuth, GoogleAuthProvider, EmailAuthProvider, signOut, onAuthStateChanged} from 'firebase/auth';
+import { getFirestore, doc, setDoc} from 'firebase/firestore';
 
 const auth = getAuth(firebaseApp)
+const db = getFirestore(firebaseApp)
 
 const signOutClicked = ({auth, navigate}) => {
   signOut(auth)
@@ -21,7 +23,12 @@ function LoginScreen() {
     signInFlow: 'popup',
     signInOptions: [GoogleAuthProvider.PROVIDER_ID, EmailAuthProvider.PROVIDER_ID],
     callbacks: {
-      signInSuccess: () => navigate(-1)
+      signInSuccess: async (currentUser) => {
+        await setDoc(doc(db, "users", currentUser.uid), {
+          displayName: currentUser.displayName,
+        })
+        navigate(-1)
+      }
     }
   };
   

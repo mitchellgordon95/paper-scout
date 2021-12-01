@@ -43,6 +43,11 @@ function PaperScreen() {
   const navigate = useNavigate()
   onAuthStateChanged(auth, user => setCurrentUser(user))
 
+  // TODO (mitchg) - For now, do the stupid thing and just strip the version string.
+  if (paperId[paperId.length - 2] === 'v') {
+    navigate(`/paper/arxiv/${paperId.slice(0,-2)}`)
+  }
+
   useEffect(() => {
     getPaperInfo({paperId}).then(info => setPaperInfo(info))
 
@@ -68,7 +73,10 @@ function PaperScreen() {
       <br/>
       { userAlreadyEndorsed ? '' : <button onClick={() => endorsePaper({paperId, paperInfo, currentUser, endorsements, setEndorsements, navigate})}>Endorse</button>}
       Endorsed By:
-      {endorsements.map(endorsement => <p key={endorsement.userId}>{endorsement.userDisplayName}</p>)}
+      {endorsements.map(endorsement =>
+        <p key={endorsement.userId} onClick={() => navigate(`/user/${endorsement.userId}`)}>
+          {endorsement.userDisplayName}
+        </p>)}
     </Flexbox>
   );
 }

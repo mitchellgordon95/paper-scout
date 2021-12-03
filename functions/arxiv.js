@@ -1,9 +1,10 @@
-import fetch from "node-fetch";
+import axios from 'axios'
+import xmldom from 'xmldom'
 
 export const fetchAndParseArxiv = async (queryString) => {
-  const resp = await fetch(`https://export.arxiv.org/api/query?${queryString}`)
-  const xmlStr = await resp.text()
-  const parser = new DOMParser();
+  const resp = await axios.request(`https://export.arxiv.org/api/query?${queryString}`)
+  const xmlStr = resp.data
+  const parser = new xmldom.DOMParser();
   const parsedXML = parser.parseFromString(xmlStr, 'text/xml')
   const totalResults = parsedXML.getElementsByTagName('opensearch:totalResults')[0].textContent
   const entries = parsedXML.getElementsByTagName('entry')

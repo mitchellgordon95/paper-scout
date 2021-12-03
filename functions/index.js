@@ -1,7 +1,8 @@
-import * as functions from "firebase-functions";
+import functions from "firebase-functions";
 import { initializeApp } from 'firebase-admin/app'
 import { getFirestore} from 'firebase-admin/firestore'
-import { fetchAndParseArxiv } from './arxiv'
+import { fetchAndParseArxiv } from './arxiv.js'
+
 
 const app = initializeApp()
 const db = getFirestore(app)

@@ -7,14 +7,20 @@ const PER_PAGE = 10
 
 function ScoutScreen() {
   const [category, setCategory] = useState('cs.CL')
-  const [searchQuery, setSearchQuery] = useState()
+  const [searchQuery, setSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(0)
   const [totalResults, setTotalResults] = useState()
-  const [pageResults, setPageResults] = useState([])
+  const [pageResults, setPageResults] = useState()
   const navigate = useNavigate()
 
   const doSearch = async ({ pageNumber }) => {
-    const searchQueryFrag = searchQuery ? `all:${escape(searchQuery)}+AND+` : ''
+    setPageResults()
+    const queryWords = searchQuery ? searchQuery.split(' ') : []
+    const searchQueryFrag =
+      queryWords.length > 0
+        ? queryWords.map((word) => `all:${word}`).join('+AND+') + '+AND+'
+        : ''
+
     const { pageResults, totalResults } = await fetchAndParseArxiv(
       `search_query=${searchQueryFrag}cat:${category}&sortBy=lastUpdatedDate&start=${
         pageNumber * PER_PAGE
@@ -75,22 +81,24 @@ function ScoutScreen() {
         {nextPageButton}
       </Flexbox>
       <Flexbox flexDirection="column">
-        {pageResults.map((entry) => {
-          return (
-            <Flexbox
-              flexDirection="column"
-              justifyContent="flex-start"
-              key={entry.id}
-              onClick={() => navigate(`/paper/arxiv/${entry.id}`)}
-            >
-              <h4>{entry.title}</h4>
-              {/* TODO: views and endorsements? */}
-              <div>{new Date(entry.updatedAt).toString()}</div>
-              <div>{entry.authors ? entry.authors.join(', ') : ''}</div>
-              <div>{entry.abstract.slice(0, 200) + '...'}</div>
-            </Flexbox>
-          )
-        })}
+        {pageResults
+          ? pageResults.map((entry) => {
+              return (
+                <Flexbox
+                  flexDirection="column"
+                  justifyContent="flex-start"
+                  key={entry.id}
+                  onClick={() => navigate(`/paper/arxiv/${entry.id}`)}
+                >
+                  <h4>{entry.title}</h4>
+                  {/* TODO: views and endorsements? */}
+                  <div>{new Date(entry.updatedAt).toString()}</div>
+                  <div>{entry.authors ? entry.authors.join(', ') : ''}</div>
+                  <div>{entry.abstract.slice(0, 200) + '...'}</div>
+                </Flexbox>
+              )
+            })
+          : 'Loading...'}
       </Flexbox>
       <Flexbox flexDirection="row">
         {currentPage > 0 ? prevPageButton : ''}

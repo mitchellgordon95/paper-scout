@@ -31,8 +31,8 @@ function ProfileScreen() {
     onSnapshot(q, snapshot => setEndorsements(snapshot.docs.map(x => x.data())))
   }, [userId])
 
-  const currentEndorsements = endorsements.filter(e => !e.deletedAt)
-  const pastEndorsements = endorsements.filter(e => e.deletedAt)
+  const currentEndorsements = endorsements ? endorsements.filter(e => !e.deletedAt) : []
+  const pastEndorsements = endorsements ? endorsements.filter(e => e.deletedAt) : []
 
   const endorsementComponent = (endorsement) => 
               <div key={endorsement.id} >

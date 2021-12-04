@@ -28,7 +28,7 @@ const endorsePaper = async ({paperId, currentUser, navigate}) => {
   else {
     // Note: the new endorsement will be auto-pulled from the snapshot observer
     const endorsePaperCloudFunction = httpsCallable(functions, 'endorsePaper')
-    endorsePaperCloudFunction({ paperId: `arxiv://${paperId}` }).catch(err => {
+    endorsePaperCloudFunction({ paperId: `arxiv|${paperId}` }).catch(err => {
       console.log(err)
       alert(err.message)
     })
@@ -54,7 +54,7 @@ function PaperScreen() {
     // Listen for changes to the endorsements for this paper
     const q = query(
       collection(db, 'endorsements'),
-      where('paperId', "==", `arxiv://${paperId}`),
+      where('paperId', "==", `arxiv|${paperId}`),
       orderBy('updatedAt')
     );
     onSnapshot(q, snapshot => setEndorsements(snapshot.docs.map(x => x.data())))

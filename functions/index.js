@@ -6,10 +6,13 @@ import { fetchAndParseArxiv } from './arxiv.js'
 const app = initializeApp()
 const db = getFirestore(app)
 const increment = FieldValue.increment(1);
+const decrement = FieldValue.increment(-1);
 
 export const endorsePaper = functions.https.onCall(async (data, context) => {
   const { paperId } = data
-  const [schema, arxivId] = paperId.split("://")
+  // Note: we choose a '|' to separate schema from id because forward
+  // slashes mess with firestore's id system.
+  const [schema, arxivId] = paperId.split("|")
 
   if (schema !== 'arxiv') {
     throw new functions.https.HttpsError('invalid-argument', 'Unknown paper id schema.')
@@ -35,7 +38,7 @@ export const endorsePaper = functions.https.onCall(async (data, context) => {
   }
 
   if (userEndorsements.filter(endorsement => endorsement.paperId === paperId).length > 0) {
-    throw new functions.https.HttpsError('failed-precondition', 'Paper already endorsed.')
+    throw new functions.https.HttpsError('failed-precondition', 'Paper already or previously endorsed.')
   }
   
   // Give users points
@@ -45,6 +48,13 @@ export const endorsePaper = functions.https.onCall(async (data, context) => {
   paperEndorsements.filter(endorsement => !endorsement.deletedAt).map(endorsement => {
     db.collection('users').doc(endorsement.userId).update({points: increment})
   })
+
+  // Track endorsements per paper
+  db.collection('papers').doc(paperId).set({
+    ...paperInfo,
+    currentEndorsements: increment,
+    lifetimeEndorsements: increment,
+  }, {merge: true} )
 
   // Clients using onSnapshot will auto-pull DB changes, no need to return anything.
   db.collection('endorsements').add({
@@ -71,5 +81,10 @@ export const removeEndorsement = functions.https.onCall(async (data, context) =>
     .where('userId', "==", userId)
     .get()
 
+  if (endorsement.data().deletedAt) {
+    throw new functions.https.HttpsError('failed-precondition', 'Endorsement already removed.')
+  }
+
   endorsement.docs[0].ref.update({deletedAt: Date.now()}) 
+  db.collection('papers').doc(paperId).update({ currentEndorsements: decrement })
 })

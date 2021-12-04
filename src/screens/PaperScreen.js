@@ -4,7 +4,7 @@ import {useState, useEffect} from 'react'
 import Flexbox from 'flexbox-react'
 import { collection, getFirestore, onSnapshot, query, where, orderBy} from 'firebase/firestore';
 import firebaseApp from '../FirebaseApp'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { getAuth, onAuthStateChanged, sendEmailVerification } from 'firebase/auth'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { fetchAndParseArxiv } from '../helpers/Arxiv'
 import { useNavigate } from 'react-router'
@@ -25,7 +25,10 @@ const endorsePaper = async ({paperId, currentUser, navigate}) => {
   if (!currentUser) {
     navigate('/login')
   }
-  else {
+  else if (!currentUser.emailVerified) {
+    sendEmailVerification(currentUser)
+    alert('Please verify your email. A verification email has been sent.')
+  } else {
     // Note: the new endorsement will be auto-pulled from the snapshot observer
     const endorsePaperCloudFunction = httpsCallable(functions, 'endorsePaper')
     endorsePaperCloudFunction({ paperId: `arxiv|${paperId}` }).catch(err => {

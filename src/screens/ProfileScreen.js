@@ -3,7 +3,7 @@ import Flexbox from 'flexbox-react'
 import { useNavigate, useParams } from 'react-router'
 import firebaseApp from '../FirebaseApp';
 import { getFirestore, collection, doc, getDoc, onSnapshot, query, where, orderBy} from 'firebase/firestore';
-import { getAuth, signOut, onAuthStateChanged} from 'firebase/auth';
+import { getAuth, signOut, onAuthStateChanged, sendEmailVerification} from 'firebase/auth';
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
 const db = getFirestore(firebaseApp)
@@ -11,6 +11,11 @@ const auth = getAuth(firebaseApp)
 const functions = getFunctions(firebaseApp)
 
 const removeEndorsementCloudFunction = httpsCallable(functions, 'removeEndorsement')
+
+const sendVerificationEmail = (user) => {
+  alert('Verification email sent.')
+  sendEmailVerification(user)
+}
 
 function ProfileScreen() {
   const navigate = useNavigate()
@@ -48,6 +53,7 @@ function ProfileScreen() {
       { user ?
         <Flexbox flexDirection='column' alignItems='flex-start'>
           <h1>{user.displayName}</h1>
+          {currentUser && userId === currentUser.uid && !currentUser.emailVerified ? <button onClick={() => sendVerificationEmail(currentUser)}>Not Verified</button> : ""}
           {currentUser && userId === currentUser.uid ? <button onClick={() => signOut(auth)}>Sign Out</button> : ""}
           <div>Points {user.points || '0'}</div>
         </Flexbox>

@@ -1,17 +1,11 @@
 {
   "functions": {
-    "predeploy": [
-      "yarn build"
-    ],
+    "predeploy": ["yarn build"],
     "source": "functions"
   },
   "hosting": {
     "public": "build",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
         "source": "**",

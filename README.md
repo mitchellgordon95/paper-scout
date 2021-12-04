@@ -52,7 +52,7 @@ it's an SQL database so that it's easier to migrate later. Why? AFAICT
 NoSQL is only the correct choice when you need to support huge write
 scalability and are willing to sacrifice a bunch of ACID
 features. More subjectively, I also think NoSQL makes it harder to "do
-the right thing" by giving you too many choices (and therefore burns 
+the right thing" by giving you too many choices (and therefore burns
 developer time in the long run). In SQL, there's usually one or two
 "right" ways to normalize data that efficiently support many types of
 queries. In NoSQL, you basically have to know what all your query

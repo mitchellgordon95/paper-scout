@@ -11,6 +11,7 @@
     "cra-template": "1.1.2",
     "firebase": "^9.5.0",
     "flexbox-react": "^4.4.0",
+    "prettier": "^2.5.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-firebaseui": "^6.0.0",

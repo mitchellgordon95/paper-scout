@@ -3,19 +3,25 @@ import { initializeApp } from 'firebase-admin/app'
 import { getFirestore, FieldValue } from 'firebase-admin/firestore'
 import { fetchAndParseArxiv } from './arxiv.js'
 
-
-
 const app = initializeApp()
 const db = getFirestore(app)
 const increment = FieldValue.increment(1);
 
-export const endorsePaper = functions.https.onRequest(async (request, response) => {
-  const { paperId, userId } = request.query
+export const endorsePaper = functions.https.onCall(async (data, context) => {
+  const { paperId } = data
+  const [schema, arxivId] = paperId.split("://")
 
-  // TODO (mitchg) - check auth
+  if (schema !== 'arxiv') {
+    throw new functions.https.HttpsError('invalid-argument', 'Unknown paper id schema.')
+  }
 
+  if (!context?.auth?.uid) {
+    throw new functions.https.HttpsError('failed-precondition', 'Must be logged in to endorse papers')
+  }
+
+  const userId = context.auth.uid
   const user = (await db.collection('users').doc(userId).get()).data()
-  const paperInfo = (await fetchAndParseArxiv(`id_list=${paperId}`)).pageResults[0]
+  const paperInfo = (await fetchAndParseArxiv(`id_list=${arxivId}`)).pageResults[0]
 
   const userEndorsements = (await db.collection('endorsements')
     .where('userId', "==", userId)
@@ -25,23 +31,22 @@ export const endorsePaper = functions.https.onRequest(async (request, response) 
   const currentEndorsements = userEndorsements.filter(endorsement => !endorsement.deletedAt)
 
   if (currentEndorsements.length > 4) {
-    response.status(500).send("Too many endorsements.")
-    return
+    throw new functions.https.HttpsError('failed-precondition', 'Too many endorsements.')
   }
 
   if (userEndorsements.filter(endorsement => endorsement.paperId === paperId).length > 0) {
-    response.status(500).send("Paper already endorsed.")
-    return
+    throw new functions.https.HttpsError('failed-precondition', 'Paper already endorsed.')
   }
   
+  // Give users points
   const paperEndorsements = (await db.collection('endorsements')
     .where('paperId', "==", paperId)
     .get()).docs.map(doc => doc.data())
-
   paperEndorsements.filter(endorsement => !endorsement.deletedAt).map(endorsement => {
     db.collection('users').doc(endorsement.userId).update({points: increment})
   })
 
+  // Clients using onSnapshot will auto-pull DB changes, no need to return anything.
   db.collection('endorsements').add({
     paperId,
     userId,
@@ -51,7 +56,4 @@ export const endorsePaper = functions.https.onRequest(async (request, response) 
     deletedAt: null,
   })
   
-  // Clients using onSnapshot will auto-pull DB changes.
-  response.status(200).send('ok')
-
 });

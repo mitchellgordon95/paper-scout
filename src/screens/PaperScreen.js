@@ -2,14 +2,16 @@ import './PaperScreen.css';
 import { useParams } from 'react-router-dom'
 import {useState, useEffect} from 'react'
 import Flexbox from 'flexbox-react'
-import { collection, getFirestore, onSnapshot, addDoc, query, where, orderBy} from 'firebase/firestore';
+import { collection, getFirestore, onSnapshot, query, where, orderBy} from 'firebase/firestore';
 import firebaseApp from '../FirebaseApp'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { getFunctions, httpsCallable } from 'firebase/functions'
 import { fetchAndParseArxiv } from '../helpers/Arxiv'
 import { useNavigate } from 'react-router'
 
 const auth = getAuth(firebaseApp)
 const db = getFirestore();
+const functions = getFunctions()
 
 const getPaperInfo = async ({paperId}) => {
   // TODO (mitchg) - we should probably double check that there's only
@@ -19,18 +21,16 @@ const getPaperInfo = async ({paperId}) => {
   return (await fetchAndParseArxiv(`id_list=${paperId}`)).pageResults[0]
 }
 
-const endorsePaper = async ({paperId, paperInfo, currentUser, endorsements, setEndorsements, navigate}) => {
+const endorsePaper = async ({paperId, currentUser, navigate}) => {
   if (!currentUser) {
     navigate('/login')
   }
   else {
-    await addDoc(collection(db, 'endorsements'), {
-      paperId: `arxiv://${paperId}`,
-      userId: currentUser.uid,
-      paperInfo,
-      userDisplayName: currentUser.displayName,
-      updatedAt: Date.now(),
-      deletedAt: null,
+    // Note: the new endorsement will be auto-pulled from the snapshot observer
+    const endorsePaperCloudFunction = httpsCallable(functions, 'endorsePaper')
+    endorsePaperCloudFunction({ paperId: `arxiv://${paperId}` }).catch(err => {
+      console.log(err)
+      alert(err.message)
     })
   }
 }
@@ -71,7 +71,7 @@ function PaperScreen() {
       <br/>
       <div>{paperInfo.abstract}</div>
       <br/>
-      { userAlreadyEndorsed ? '' : <button onClick={() => endorsePaper({paperId, paperInfo, currentUser, endorsements, setEndorsements, navigate})}>Endorse</button>}
+      { userAlreadyEndorsed ? '' : <button onClick={() => endorsePaper({paperId,  currentUser, navigate})}>Endorse</button>}
       Endorsed By:
       {endorsements.map(endorsement =>
         <p key={endorsement.userId} onClick={() => navigate(`/user/${endorsement.userId}`)}>

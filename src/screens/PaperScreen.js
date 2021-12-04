@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router'
 
 const auth = getAuth(firebaseApp)
 const db = getFirestore();
-const functions = getFunctions()
+const functions = getFunctions(firebaseApp)
 
 const getPaperInfo = async ({paperId}) => {
   // TODO (mitchg) - we should probably double check that there's only

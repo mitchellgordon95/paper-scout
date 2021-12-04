@@ -31,7 +31,7 @@ export const endorsePaper = functions.https.onCall(async (data, context) => {
   const currentEndorsements = userEndorsements.filter(endorsement => !endorsement.deletedAt)
 
   if (currentEndorsements.length > 4) {
-    throw new functions.https.HttpsError('failed-precondition', 'Too many endorsements.')
+    throw new functions.https.HttpsError('failed-precondition', 'Too many endorsements. Please remove one via your profile page.')
   }
 
   if (userEndorsements.filter(endorsement => endorsement.paperId === paperId).length > 0) {
@@ -57,3 +57,19 @@ export const endorsePaper = functions.https.onCall(async (data, context) => {
   })
   
 });
+
+export const removeEndorsement = functions.https.onCall(async (data, context) => {
+  const { paperId } = data
+
+  if (!context?.auth?.uid) {
+    throw new functions.https.HttpsError('failed-precondition', 'Must be logged in to remove endorsements.')
+  }
+  const userId = context.auth.uid
+
+  const endorsement = await db.collection('endorsements')
+    .where('paperId', "==", paperId)
+    .where('userId', "==", userId)
+    .get()
+
+  endorsement.docs[0].ref.update({deletedAt: Date.now()}) 
+})

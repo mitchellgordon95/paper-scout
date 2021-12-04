@@ -3,7 +3,7 @@ import Flexbox from 'flexbox-react'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebaseApp from '../FirebaseApp';
 import { useNavigate } from 'react-router'
-import { getAuth, GoogleAuthProvider, EmailAuthProvider, signOut, onAuthStateChanged} from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, EmailAuthProvider, signOut, onAuthStateChanged, sendEmailVerification } from 'firebase/auth';
 import { getFirestore, doc, setDoc} from 'firebase/firestore';
 
 const auth = getAuth(firebaseApp)
@@ -28,6 +28,10 @@ function LoginScreen() {
           displayName: currentUser.displayName,
           points: 0
         })
+        if (!currentUser.emailVerified) {
+          sendEmailVerification(currentUser)
+          alert('A verification email has been sent.')
+        }
         navigate(-1)
       }
     }

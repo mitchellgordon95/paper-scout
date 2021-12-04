@@ -23,6 +23,11 @@ export const endorsePaper = functions.https.onCall(async (data, context) => {
   }
 
   const userId = context.auth.uid
+
+  if(!context?.auth?.token?.email_verified) {
+    throw new functions.https.HttpsError('failed-precondition', 'Please verify your email.')
+  }
+
   const user = (await db.collection('users').doc(userId).get()).data()
   const paperInfo = (await fetchAndParseArxiv(`id_list=${arxivId}`)).pageResults[0]
 

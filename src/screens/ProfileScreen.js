@@ -51,7 +51,7 @@ function ProfileScreen() {
       orderBy('updatedAt')
     )
     onSnapshot(q, (snapshot) =>
-      setEndorsements(snapshot.docs.map((x) => x.data()))
+      setEndorsements(snapshot.docs.map((x) => ({ id: x.id, ...x.data() })))
     )
   }, [userId])
 
@@ -62,33 +62,39 @@ function ProfileScreen() {
     ? endorsements.filter((e) => e.deletedAt)
     : []
 
-  const endorsementComponent = (endorsement) => (
-    <div key={endorsement.id}>
+  const EndorsementComponent = ({ endorsement }) => {
+    return (
       <div>
-        <span
-          onClick={() => navigate(`/paper/arxiv/${endorsement.paperInfo.id}`)}
-        >
-          {endorsement.paperInfo.title}
-        </span>
-        {!endorsement.deletedAt && currentUser && userId === currentUser.uid ? (
-          <button
-            onClick={() => {
-              // eslint-disable-nextline no-restricted-globals
-              const confirmed = window.confirm(
-                `Are you sure you want to remove your endorsement of ${endorsement.paperInfo.title}?`
-              )
-              if (confirmed)
-                removeEndorsementCloudFunction({ paperId: endorsement.paperId })
-            }}
+        <div>
+          <span
+            onClick={() => navigate(`/paper/arxiv/${endorsement.paperInfo.id}`)}
           >
-            X
-          </button>
-        ) : (
-          ''
-        )}
+            {endorsement.paperInfo.title}
+          </span>
+          {!endorsement.deletedAt &&
+          currentUser &&
+          userId === currentUser.uid ? (
+            <button
+              onClick={() => {
+                // eslint-disable-nextline no-restricted-globals
+                const confirmed = window.confirm(
+                  `Are you sure you want to remove your endorsement of ${endorsement.paperInfo.title}?`
+                )
+                if (confirmed)
+                  removeEndorsementCloudFunction({
+                    paperId: endorsement.paperId,
+                  })
+              }}
+            >
+              X
+            </button>
+          ) : (
+            ''
+          )}
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 
   return (
     <Flexbox flexDirection="column" flex="1" maxWidth="80vw">
@@ -117,7 +123,12 @@ function ProfileScreen() {
       {currentEndorsements ? (
         <Flexbox flexDirection="column">
           <div>Endorsements:</div>
-          {currentEndorsements.map(endorsementComponent)}
+          {currentEndorsements.map((endorsement) => (
+            <EndorsementComponent
+              endorsement={endorsement}
+              key={endorsement.id}
+            />
+          ))}
         </Flexbox>
       ) : (
         'Loading...'
@@ -125,7 +136,12 @@ function ProfileScreen() {
       {pastEndorsements ? (
         <Flexbox flexDirection="column">
           <div>Past Endorsements:</div>
-          {pastEndorsements.map(endorsementComponent)}
+          {pastEndorsements.map((endorsement) => (
+            <EndorsementComponent
+              endorsement={endorsement}
+              key={endorsement.id}
+            />
+          ))}
         </Flexbox>
       ) : (
         'Loading...'

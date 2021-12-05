@@ -33,10 +33,10 @@ const PaperInfoComponent = ({ paperInfo }) => {
       {/* TODO: clicking an author searches for the author in /scout */}
       <div>{paperInfo.authors ? paperInfo.authors.join(', ') : ''}</div>
       <Flexbox width="100%" justifyContent="space-evenly">
-        <a href={paperInfo.arxivLink} target="_blank">
+        <a href={paperInfo.arxivLink} target="_blank" rel="noreferrer">
           arxiv
         </a>
-        <a href={paperInfo.pdfLink} target="_blank">
+        <a href={paperInfo.pdfLink} target="_blank" rel="noreferrer">
           pdf
         </a>
       </Flexbox>

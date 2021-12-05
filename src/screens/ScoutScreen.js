@@ -89,6 +89,7 @@ function ScoutScreen() {
                   justifyContent="flex-start"
                   key={entry.id}
                   onClick={() => navigate(`/paper/arxiv/${entry.id}`)}
+                  className="clickable"
                 >
                   <h4>{entry.title}</h4>
                   {/* TODO: views and endorsements? */}

@@ -68,6 +68,7 @@ function ProfileScreen() {
         <div>
           <span
             onClick={() => navigate(`/paper/arxiv/${endorsement.paperInfo.id}`)}
+            className="clickable"
           >
             {endorsement.paperInfo.title}
           </span>

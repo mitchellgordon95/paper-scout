@@ -31,11 +31,20 @@ const MainLayout = () => {
           justifyContent="space-between"
           minWidth="80vw"
         >
-          <h3 onClick={() => navigate('/')}>Paper Scout</h3>
+          <h3 onClick={() => navigate('/')} className="clickable">
+            Paper Scout
+          </h3>
           {currentUser ? (
-            <p onClick={() => navigate(`/user/${currentUser.uid}`)}>Profile</p>
+            <p
+              onClick={() => navigate(`/user/${currentUser.uid}`)}
+              className="clickable"
+            >
+              Profile
+            </p>
           ) : (
-            <p onClick={() => navigate('/login')}>Login</p>
+            <p onClick={() => navigate('/login')} className="clickable">
+              Login
+            </p>
           )}
         </Flexbox>
       )}

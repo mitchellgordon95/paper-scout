@@ -16,3 +16,8 @@ input[type='submit']:hover {
   background: #fff;
   color: #1f1f1f !important;
 }
+
+.clickable:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}

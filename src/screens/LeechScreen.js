@@ -36,7 +36,11 @@ function LeechScreen() {
         <Flexbox flexDirection="column" flex="1" alignItems="center">
           <div>Leaderboard</div>
           {users.map((user) => (
-            <div key={user.id} onClick={() => navigate(`/user/${user.id}`)}>
+            <div
+              key={user.id}
+              onClick={() => navigate(`/user/${user.id}`)}
+              className="clickable"
+            >
               {user.displayName} ({user.points || 0} pts)
             </div>
           ))}
@@ -53,6 +57,7 @@ function LeechScreen() {
             <div
               key={paper.id}
               onClick={() => navigate(`/paper/arxiv/${paper.id}`)}
+              className="clickable"
             >
               {paper.title} ({paper.lifetimeEndorsements || 0})
             </div>

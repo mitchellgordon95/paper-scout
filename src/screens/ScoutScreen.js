@@ -57,7 +57,7 @@ function ScoutScreen() {
       flexDirection="column"
       flex="1"
       alignItems="flex-start"
-      maxWidth="80vw"
+      width="80vw"
     >
       <Flexbox>
         <form onSubmit={onSearchSubmit}>

@@ -77,23 +77,17 @@ const endorsePaper = async ({
   }
 }
 
-function PaperScreen() {
-  const { paperId } = useParams()
-  const [paperInfo, setPaperInfo] = useState()
-  const [endorsements, setEndorsements] = useState([])
+const PaperEndorsementsComponent = ({ paperId, navigate }) => {
   const [endorsing, setEndorsing] = useState(false)
+  const [endorsements, setEndorsements] = useState()
   const [currentUser, setCurrentUser] = useState()
-  const navigate = useNavigate()
   onAuthStateChanged(auth, (user) => setCurrentUser(user))
 
-  // TODO (mitchg) - For now, do the stupid thing and just strip the version string.
-  if (paperId[paperId.length - 2] === 'v') {
-    navigate(`/paper/arxiv/${paperId.slice(0, -2)}`)
-  }
+  const userAlreadyEndorsed =
+    endorsements &&
+    endorsements.filter((ed) => ed.userId === currentUser?.uid).length > 0
 
   useEffect(() => {
-    getPaperInfo({ paperId }).then((info) => setPaperInfo(info))
-
     // Listen for changes to the endorsements for this paper
     const q = query(
       collection(db, 'endorsements'),
@@ -105,23 +99,12 @@ function PaperScreen() {
     )
   }, [paperId])
 
-  const userAlreadyEndorsed =
-    endorsements &&
-    endorsements.filter((ed) => ed.userId === currentUser?.uid).length > 0
+  if (endorsing || !endorsements) return 'Loading...'
+
   return (
-    <Flexbox
-      flexDirection="column"
-      className="PaperScreen"
-      flex="1"
-      alignItems="center"
-      maxWidth="80vw"
-    >
-      {paperInfo ? <PaperInfoComponent paperInfo={paperInfo} /> : 'Loading...'}
-      <br />
+    <Flexbox flexDirection="column" alignItems="center">
       {userAlreadyEndorsed ? (
         ''
-      ) : endorsing ? (
-        <div>Loading...</div>
       ) : (
         <button
           onClick={() =>
@@ -140,6 +123,34 @@ function PaperScreen() {
           {endorsement.userDisplayName}
         </p>
       ))}
+    </Flexbox>
+  )
+}
+
+function PaperScreen() {
+  const { paperId } = useParams()
+  const [paperInfo, setPaperInfo] = useState()
+  const navigate = useNavigate()
+
+  // TODO (mitchg) - For now, do the stupid thing and just strip the version string.
+  if (paperId[paperId.length - 2] === 'v') {
+    navigate(`/paper/arxiv/${paperId.slice(0, -2)}`)
+  }
+
+  useEffect(() => {
+    getPaperInfo({ paperId }).then((info) => setPaperInfo(info))
+  }, [paperId])
+
+  return (
+    <Flexbox
+      flexDirection="column"
+      className="PaperScreen"
+      flex="1"
+      alignItems="center"
+      maxWidth="80vw"
+    >
+      {paperInfo ? <PaperInfoComponent paperInfo={paperInfo} /> : 'Loading...'}
+      <PaperEndorsementsComponent paperId={paperId} />
     </Flexbox>
   )
 }

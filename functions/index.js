@@ -123,7 +123,7 @@ export const removeEndorsement = functions.https.onCall(
       .where('userId', '==', userId)
       .get()
 
-    if (endorsement.data().deletedAt) {
+    if (endorsement.docs[0].data().deletedAt) {
       throw new functions.https.HttpsError(
         'failed-precondition',
         'Endorsement already removed.'

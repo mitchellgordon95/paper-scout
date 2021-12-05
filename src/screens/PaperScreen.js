@@ -119,6 +119,7 @@ const PaperEndorsementsComponent = ({ paperId, navigate }) => {
         <p
           key={endorsement.userId}
           onClick={() => navigate(`/user/${endorsement.userId}`)}
+          className="clickable"
         >
           {endorsement.userDisplayName}
         </p>
@@ -150,7 +151,7 @@ function PaperScreen() {
       maxWidth="80vw"
     >
       {paperInfo ? <PaperInfoComponent paperInfo={paperInfo} /> : 'Loading...'}
-      <PaperEndorsementsComponent paperId={paperId} />
+      <PaperEndorsementsComponent paperId={paperId} navigate={navigate} />
     </Flexbox>
   )
 }

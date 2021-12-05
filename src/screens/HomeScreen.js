@@ -21,7 +21,7 @@ function HomeScreen() {
       <Flexbox
         flexDirection="row"
         alignItems="center"
-        justifyContent="space-evenly"
+        justifyContent="space-between"
         height="200px"
         width="200px"
       >

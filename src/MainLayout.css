@@ -3,13 +3,15 @@
   color: white;
 }
 
-button {
+button,
+input[type='submit'] {
   border: solid 2px #fff;
   background: transparent;
   color: #fff !important;
 }
 
-button:hover {
+button:hover,
+input[type='submit']:hover {
   border: solid 2px #fff;
   background: #fff;
   color: #1f1f1f !important;

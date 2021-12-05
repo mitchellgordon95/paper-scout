@@ -11,6 +11,7 @@ export const fetchAndParseArxiv = async (queryString) => {
   const jsonEntries = Array.from(entries).map((entry) => {
     const authorList = Array.from(entry.getElementsByTagName('author'))
     const categories = Array.from(entry.getElementsByTagName('category'))
+    const links = Array.from(entry.getElementsByTagName('link'))
     return {
       id: entry.getElementsByTagName('id')[0].textContent.split('/').pop(),
       title: entry.getElementsByTagName('title')[0].textContent,
@@ -18,6 +19,12 @@ export const fetchAndParseArxiv = async (queryString) => {
       authors: authorList.map(
         (author) => author.getElementsByTagName('name')[0].textContent
       ),
+      arxivLink: links
+        .find((link) => link.getAttribute('type') === 'text/html')
+        .getAttribute('href'),
+      pdfLink: links
+        .find((link) => link.getAttribute('type') === 'application/pdf')
+        .getAttribute('href'),
       categories: categories.map((category) => category.getAttribute('term')),
       updatedAt: entry.getElementsByTagName('updated')[0].textContent,
     }

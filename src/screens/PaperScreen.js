@@ -24,6 +24,27 @@ const auth = getAuth(firebaseApp)
 const db = getFirestore()
 const functions = getFunctions(firebaseApp)
 
+const PaperInfoComponent = ({ paperInfo }) => {
+  return (
+    <Flexbox flexDirection="column" alignItems="center">
+      <h2>{paperInfo.title}</h2>
+      {/* TODO: clicking a category searches for the category in /scout */}
+      <div>{paperInfo.categories ? paperInfo.categories.join(' ') : ''}</div>
+      {/* TODO: clicking an author searches for the author in /scout */}
+      <div>{paperInfo.authors ? paperInfo.authors.join(', ') : ''}</div>
+      <Flexbox width="100%" justifyContent="space-evenly">
+        <a href={paperInfo.arxivLink} target="_blank">
+          arxiv
+        </a>
+        <a href={paperInfo.pdfLink} target="_blank">
+          pdf
+        </a>
+      </Flexbox>
+      <div>{paperInfo.abstract}</div>
+    </Flexbox>
+  )
+}
+
 const getPaperInfo = async ({ paperId }) => {
   // TODO (mitchg) - we should probably double check that there's only
   // one result. An easy edge case here is when there are multiple
@@ -32,7 +53,12 @@ const getPaperInfo = async ({ paperId }) => {
   return (await fetchAndParseArxiv(`id_list=${paperId}`)).pageResults[0]
 }
 
-const endorsePaper = async ({ paperId, currentUser, navigate }) => {
+const endorsePaper = async ({
+  paperId,
+  currentUser,
+  navigate,
+  setEndorsing,
+}) => {
   if (!currentUser) {
     navigate('/login')
   } else if (!currentUser.emailVerified) {
@@ -40,18 +66,22 @@ const endorsePaper = async ({ paperId, currentUser, navigate }) => {
     alert('Please verify your email. A verification email has been sent.')
   } else {
     // Note: the new endorsement will be auto-pulled from the snapshot observer
+    setEndorsing(true)
     const endorsePaperCloudFunction = httpsCallable(functions, 'endorsePaper')
-    endorsePaperCloudFunction({ paperId: `arxiv|${paperId}` }).catch((err) => {
-      console.log(err)
-      alert(err.message)
-    })
+    endorsePaperCloudFunction({ paperId: `arxiv|${paperId}` })
+      .then((res) => setEndorsing(false))
+      .catch((err) => {
+        console.log(err)
+        alert(err.message)
+      })
   }
 }
 
 function PaperScreen() {
   const { paperId } = useParams()
-  const [paperInfo, setPaperInfo] = useState({})
+  const [paperInfo, setPaperInfo] = useState()
   const [endorsements, setEndorsements] = useState([])
+  const [endorsing, setEndorsing] = useState(false)
   const [currentUser, setCurrentUser] = useState()
   const navigate = useNavigate()
   onAuthStateChanged(auth, (user) => setCurrentUser(user))
@@ -86,19 +116,17 @@ function PaperScreen() {
       alignItems="center"
       maxWidth="80vw"
     >
-      <h2>{paperInfo.title || 'Loading...'}</h2>
-      {/* TODO: clicking a category searches for the category in /scout */}
-      <div>{paperInfo.categories ? paperInfo.categories.join(' ') : ''}</div>
-      {/* TODO: clicking an author searches for the author in /scout */}
-      <div>{paperInfo.authors ? paperInfo.authors.join(', ') : ''}</div>
-      <br />
-      <div>{paperInfo.abstract}</div>
+      {paperInfo ? <PaperInfoComponent paperInfo={paperInfo} /> : 'Loading...'}
       <br />
       {userAlreadyEndorsed ? (
         ''
+      ) : endorsing ? (
+        <div>Loading...</div>
       ) : (
         <button
-          onClick={() => endorsePaper({ paperId, currentUser, navigate })}
+          onClick={() =>
+            endorsePaper({ paperId, currentUser, navigate, setEndorsing })
+          }
         >
           Endorse
         </button>

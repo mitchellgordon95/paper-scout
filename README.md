@@ -44,20 +44,3 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 We're hosting with Firebase, and also using Firebase auth and
 Firestore DB. Deploying happens automatically via github actions
 whenever a PR is merged or whenever master is pushed.
-
-## Thoughts on Firestore
-
-We're using Firestore because it's free, but we're going to pretend
-it's an SQL database so that it's easier to migrate later. Why? AFAICT
-NoSQL is only the correct choice when you need to support huge write
-scalability and are willing to sacrifice a bunch of ACID
-features. More subjectively, I also think NoSQL makes it harder to "do
-the right thing" by giving you too many choices (and therefore burns
-developer time in the long run). In SQL, there's usually one or two
-"right" ways to normalize data that efficiently support many types of
-queries. In NoSQL, you basically have to know what all your query
-patterns are up front and design your data for that.
-
-In my experience, the data model changes much less frequently than the
-queries. If this ends up being worth expanding, I'll probably move to
-Postgres + GraphQL.

@@ -64,25 +64,34 @@ function ProfileScreen() {
 
   const endorsementComponent = (endorsement) => (
     <div key={endorsement.id}>
-      <div onClick={() => navigate(`/paper/arxiv/${endorsement.paperInfo.id}`)}>
-        {endorsement.paperInfo.title}
-      </div>
-      {!endorsement.deletedAt && currentUser && userId === currentUser.uid ? (
-        <button
-          onClick={() =>
-            removeEndorsementCloudFunction({ paperId: endorsement.paperId })
-          }
+      <div>
+        <span
+          onClick={() => navigate(`/paper/arxiv/${endorsement.paperInfo.id}`)}
         >
-          Remove
-        </button>
-      ) : (
-        ''
-      )}
+          {endorsement.paperInfo.title}
+        </span>
+        {!endorsement.deletedAt && currentUser && userId === currentUser.uid ? (
+          <button
+            onClick={() => {
+              // eslint-disable-nextline no-restricted-globals
+              const confirmed = window.confirm(
+                `Are you sure you want to remove your endorsement of ${endorsement.paperInfo.title}?`
+              )
+              if (confirmed)
+                removeEndorsementCloudFunction({ paperId: endorsement.paperId })
+            }}
+          >
+            X
+          </button>
+        ) : (
+          ''
+        )}
+      </div>
     </div>
   )
 
   return (
-    <Flexbox flexDirection="column" flex="1">
+    <Flexbox flexDirection="column" flex="1" maxWidth="80vw">
       {user ? (
         <Flexbox flexDirection="column" alignItems="flex-start">
           <h1>{user.displayName}</h1>
